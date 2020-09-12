@@ -4,13 +4,12 @@ const mongoose = require('mongoose')
 const ObjectId = mongoose.Types.ObjectId
 const haversine = require('haversine')
 var distance = require('google-distance');
-distance.apiKey = 'AIzaSyBj1Jt7lZarIkV7kFj9zepz3E2P1UdWFek';
+distance.apiKey = 'AIzaSyAukviuPQ_-gjcT7tM4dTwO1K_Kgqc-5WQ';
 
 exports.inputData = (data, gambar) =>
     new Promise(async (resolve, reject)=>{
         const newPetshop = new petShop({
             namaPetshop : data.namaPetshop,
-            alamat: data.alamat,
             noTelp:  data.noTelp,
             gambar: gambar,
             lat: data.lat,
@@ -40,6 +39,39 @@ exports.updateData = (data, id) =>
     })
 
 
+exports.updateDataPetshop = (data, id) =>
+    new Promise(async (resolve, reject)=>{
+        console.log(data)
+        petShop.update(
+            {
+                _id: ObjectId(id)
+            }, { $set: data }
+        )
+            .then(r=>{
+                resolve(response.commonSuccessMsg('Berhasil merubah data'))
+            }).catch(err => {
+            reject(response.commonErrorMsg('Mohon Maaf Input Data Gagal'))
+        })
+    })
+
+exports.updateDataPet = (data, id, hari) =>
+    new Promise(async (resolve, reject)=>{
+        petShop.update(
+            {
+                _id: ObjectId(id),
+                "jamBuka.hari" : hari
+            }, { $set: {"jamBuka.$.jam": data.jam} }
+        )
+            .then(r=>{
+                resolve(response.commonSuccessMsg('Berhasil merubah data'))
+            }).catch(err => {
+            reject(response.commonErrorMsg('Mohon Maaf Input Data Gagal'))
+        })
+    })
+
+
+
+
 exports.updateDataGambar = (data, id) =>
     new Promise(async (resolve, reject)=>{
         console.log(data)
@@ -65,6 +97,18 @@ exports.getDataPetshop = () =>
         })
     })
 
+exports.getDataPetshopId = (id) =>
+    new Promise(async (resolve, reject)=>{
+        await petShop.findOne({
+            _id: ObjectId(id)
+        })
+            .then(r =>{
+                resolve(response.commonResult(r))
+            }).catch(err => {
+                response.commonErrorMsg('Mohon Maaf Terjadi Kesalahan Pada Server')
+            })
+    })
+
 exports.getJarakPetshop = (data, radius) =>
     new Promise(async (resolve, reject)=>{
         await petShop.find()
@@ -80,7 +124,6 @@ exports.getJarakPetshop = (data, radius) =>
                             gambar: r[i].gambar,
                             namaPetshop: r[i].namaPetshop,
                             _id: r[i]._id,
-                            alamat: r[i].alamat,
                             noTelp: r[i].noTelp,
                             jamBuka: r[i].jamBuka,
                             produk: r[i].produk,
@@ -95,7 +138,6 @@ exports.getJarakPetshop = (data, radius) =>
                             gambar: r[i].gambar,
                             namaPetshop: r[i].namaPetshop,
                             _id: r[i]._id,
-                            alamat: r[i].alamat,
                             noTelp: r[i].noTelp,
                             jamBuka: r[i].jamBuka,
                             produk: r[i].produk,
@@ -130,8 +172,8 @@ const getData = (latLongOrigin, latLongDesti) =>
 
 
 const compare = (a, b) => {
-    const jarakA = a.jarak.distance.toUpperCase();
-    const jarakB = b.jarak.distance.toUpperCase();
+    const jarakA = Number(a.jarak.distance.replace("km", "").toUpperCase());
+    const jarakB = Number(b.jarak.distance.replace("km", "").toUpperCase());
 
     let comparison = 0;
     if (jarakA > jarakB) {

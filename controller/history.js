@@ -3,12 +3,13 @@ const response = require('../config/response')
 const mongoose = require('mongoose')
 const ObjectId = mongoose.Types.ObjectId
 var distance = require('google-distance');
-distance.apiKey = 'AIzaSyBj1Jt7lZarIkV7kFj9zepz3E2P1UdWFek';
+distance.apiKey = 'AIzaSyAukviuPQ_-gjcT7tM4dTwO1K_Kgqc-5WQ';
 
 exports.inputHistory = (data) =>
     new Promise(async (resolve, reject)=>{
         const newHistory = new history({
-            idPetShop : data.id
+            idPetShop : data.id,
+            macAddress: data.macAddress
         })
         history.findOne({
             idPetShop: ObjectId(data.id)
@@ -28,19 +29,25 @@ exports.inputHistory = (data) =>
 
 exports.getHistoryJarakPetshop = (data) =>
     new Promise(async (resolve, reject)=>{
-        await history.aggregate([{
-            $lookup:
-                {
-                    from: "petshops",
-                    localField: "idPetShop",
-                    foreignField: "_id",
-                    as: "data"
+        await history.aggregate([
+            {
+                $match: {
+                    macAddress: data.macAddress
                 }
-        },
+            },
+            {
+                $lookup:
+                    {
+                        from: "petshops",
+                        localField: "idPetShop",
+                        foreignField: "_id",
+                        as: "data"
+                    }
+            },
             {
                 $unwind: "$data"
             }
-        ])
+        ]).sort({_id: -1})
             .then(async r =>{
                 let datas = []
                 let originLatLong = data.lat + "," + data.lon
@@ -51,7 +58,6 @@ exports.getHistoryJarakPetshop = (data) =>
                         gambar: r[i].data.gambar,
                         namaPetshop: r[i].data.namaPetshop,
                         _id: r[i].data._id,
-                        alamat: r[i].data.alamat,
                         noTelp: r[i].data.noTelp,
                         jamBuka: r[i].data.jamBuka,
                         produk: r[i].data.produk,

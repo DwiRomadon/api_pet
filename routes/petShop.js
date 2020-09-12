@@ -31,8 +31,26 @@ router.get("/getdata", (req, res) => {
         .catch((err) => res.json(err))
 })
 
+router.get("/getdata/:id", (req, res) => {
+    petShop.getDataPetshopId(req.params.id)
+        .then((result) => res.json(result))
+        .catch((err) => res.json(err))
+})
+
 router.put("/ubah/:id",upload, (req, res) => {
     petShop.updateData(req.body, req.params.id)
+        .then((result) => res.json(result))
+        .catch((err) => res.json(err))
+})
+
+router.put("/ubahpetshop/:id/",upload, (req, res) => {
+    petShop.updateDataPetshop(req.body, req.params.id)
+        .then((result) => res.json(result))
+        .catch((err) => res.json(err))
+})
+
+router.put("/ubahpetshop/:id/:hari",upload, (req, res) => {
+    petShop.updateDataPet(req.body, req.params.id, req.params.hari)
         .then((result) => res.json(result))
         .catch((err) => res.json(err))
 })
