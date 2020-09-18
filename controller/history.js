@@ -12,7 +12,8 @@ exports.inputHistory = (data) =>
             macAddress: data.macAddress
         })
         history.findOne({
-            idPetShop: ObjectId(data.id)
+            macAddress: data.macAddress,
+            idPetShop : ObjectId(data.id)
         }).then(res => {
             if (res){
                 reject(response.commonErrorMsg('Id Sudah Ada'))
@@ -87,4 +88,16 @@ const getData = (latLongOrigin, latLongDesti) =>
                     resolve(data)
                 }
             });
+    })
+
+exports.hapusData = (id) =>
+    new Promise(async (resolve, reject)=>{
+        await history.remove({
+            idPetShop: ObjectId(id)
+        })
+            .then(r =>{
+                resolve(response.commonSuccessMsg("Berhasil menghapus data"))
+            }).catch(err => {
+                response.commonErrorMsg('Mohon Maaf Terjadi Kesalahan Pada Server')
+            })
     })

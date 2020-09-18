@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-
+var Schema = mongoose.Schema,
+    ObjectId = Schema.ObjectId;
 const userSchema = mongoose.Schema({
     namaPetshop: {
         type: String
@@ -30,7 +31,9 @@ const userSchema = mongoose.Schema({
         }
     ],
     lat: String,
-    lon: String
+    lon: String,
+    idUser: ObjectId
+
 })
 
 module.exports = mongoose.model('petShop', userSchema)

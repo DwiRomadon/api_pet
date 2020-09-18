@@ -50,7 +50,31 @@ router.put("/ubahpetshop/:id/",upload, (req, res) => {
 })
 
 router.put("/ubahpetshop/:id/:hari",upload, (req, res) => {
-    petShop.updateDataPet(req.body, req.params.id, req.params.hari)
+    petShop.updateDataHari(req.body, req.params.id, req.params.hari)
+        .then((result) => res.json(result))
+        .catch((err) => res.json(err))
+})
+
+router.put("/ubahpetproduk/:id/:produk",upload, (req, res) => {
+    petShop.updateDataProduk(req.body, req.params.id, req.params.produk)
+        .then((result) => res.json(result))
+        .catch((err) => res.json(err))
+})
+
+router.delete("/hapuspetproduk/:id/:produk",upload, (req, res) => {
+    petShop.hapusDataProduk(req.params.id, req.params.produk)
+        .then((result) => res.json(result))
+        .catch((err) => res.json(err))
+})
+
+router.put("/ubahpetjasa/:id/:jasa",upload, (req, res) => {
+    petShop.updateDataJasa(req.body, req.params.id, req.params.jasa)
+        .then((result) => res.json(result))
+        .catch((err) => res.json(err))
+})
+
+router.delete("/hapuspetjasa/:id/:jasa",upload, (req, res) => {
+    petShop.hapusDataJasa(req.params.id, req.params.jasa)
         .then((result) => res.json(result))
         .catch((err) => res.json(err))
 })
@@ -66,6 +90,13 @@ router.post("/getjarak/:radius", (req, res) => {
         .then((result) => res.json(result))
         .catch((err) => res.json(err))
 })
+
+router.post("/getjarakbyid/:radius/:id", (req, res) => {
+    petShop.getJarakPetshopById(req.body, req.params.radius, req.params.id)
+        .then((result) => res.json(result))
+        .catch((err) => res.json(err))
+})
+
 
 
 module.exports = router

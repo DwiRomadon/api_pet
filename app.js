@@ -28,6 +28,7 @@ app.use(bodyParser.urlencoded({
 app.use('/gambar', express.static(path.join(__dirname, 'gambar')))
 app.use('/petshop', require('./routes/petShop'))
 app.use('/history', require('./routes/history'))
+app.use('/user', require('./routes/user'))
 
 app.listen(port, function () {
     console.log('Server berjalan di port '+ port)
