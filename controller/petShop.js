@@ -8,7 +8,6 @@ distance.apiKey = 'AIzaSyAukviuPQ_-gjcT7tM4dTwO1K_Kgqc-5WQ';
 
 exports.inputData = (data, gambar) =>
     new Promise(async (resolve, reject)=>{
-        datas
         const newPetshop = new petShop({
             namaPetshop : data.namaPetshop,
             noTelp:  data.noTelp,
