@@ -280,6 +280,20 @@ exports.getJarakPetshopById = (data, radius,id) =>
             })
     })
 
+exports.hapusData = (id) =>
+    new Promise(async (resolve, reject)=>{
+        petShop.deleteOne(
+            {
+                _id: ObjectId(id)
+            },
+        )
+            .then(r=>{
+                resolve(response.commonSuccessMsg('Berhasil menghapus data'))
+            }).catch(err => {
+            reject(response.commonErrorMsg('Mohon Maaf Input Data Gagal'))
+        })
+    })
+
 const getData = (latLongOrigin, latLongDesti) =>
     new Promise(async (resolve, reject)=>{
         await distance.get(
