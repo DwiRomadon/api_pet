@@ -193,6 +193,7 @@ exports.getJarakPetshop = (data, radius) =>
         await petShop.find()
             .then(async r =>{
                 let datas = []
+                let terdekat   = []
                 let originLatLong = data.lat + "," + data.lon
                 for (i in r){
                     let latLongDesti = r[i].lat + "," + r[i].lon
@@ -200,6 +201,19 @@ exports.getJarakPetshop = (data, radius) =>
                     let rad = jarak.distance.replace("km", "")
                     if(Number(rad) <= Number(radius)){
                         datas.push({
+                            gambar: r[i].gambar,
+                            namaPetshop: r[i].namaPetshop,
+                            _id: r[i]._id,
+                            noTelp: r[i].noTelp,
+                            jamBuka: r[i].jamBuka,
+                            produk: r[i].produk,
+                            jasa: r[i].jasa,
+                            jarak: jarak,
+                            lat: r[i].lat,
+                            lon: r[i].lon
+                        })
+                    }else {
+                        terdekat.push({
                             gambar: r[i].gambar,
                             namaPetshop: r[i].namaPetshop,
                             _id: r[i]._id,
@@ -227,7 +241,14 @@ exports.getJarakPetshop = (data, radius) =>
                         })
                     }
                 }
-                resolve(response.commonResult(datas.sort(compare)))
+                if (datas.length === 0){
+                    datas = terdekat.sort(compare)
+                    let dataKu = []
+                    dataKu = [datas[0]]
+                    resolve(response.commonResult(dataKu))
+                }else {
+                    resolve(response.commonResult(datas.sort(compare)))
+                }
             }).catch(err => {
                 response.commonErrorMsg('Mohon Maaf Terjadi Kesalahan Pada Server')
             })
@@ -240,6 +261,7 @@ exports.getJarakPetshopById = (data, radius,id) =>
         })
             .then(async r =>{
                 let datas = []
+                let terdekat   = []
                 let originLatLong = data.lat + "," + data.lon
                 for (i in r){
                     let latLongDesti = r[i].lat + "," + r[i].lon
@@ -247,6 +269,19 @@ exports.getJarakPetshopById = (data, radius,id) =>
                     let rad = jarak.distance.replace("km", "")
                     if(Number(rad) <= Number(radius)){
                         datas.push({
+                            gambar: r[i].gambar,
+                            namaPetshop: r[i].namaPetshop,
+                            _id: r[i]._id,
+                            noTelp: r[i].noTelp,
+                            jamBuka: r[i].jamBuka,
+                            produk: r[i].produk,
+                            jasa: r[i].jasa,
+                            jarak: jarak,
+                            lat: r[i].lat,
+                            lon: r[i].lon
+                        })
+                    }else {
+                        terdekat.push({
                             gambar: r[i].gambar,
                             namaPetshop: r[i].namaPetshop,
                             _id: r[i]._id,
@@ -274,7 +309,14 @@ exports.getJarakPetshopById = (data, radius,id) =>
                         })
                     }
                 }
-                resolve(response.commonResult(datas.sort(compare)))
+                if (datas.length === 0){
+                    datas = terdekat.sort(compare)
+                    let dataKu = []
+                    dataKu = [datas[0]]
+                    resolve(response.commonResult(dataKu))
+                }else {
+                    resolve(response.commonResult(datas.sort(compare)))
+                }
             }).catch(err => {
                 response.commonErrorMsg('Mohon Maaf Terjadi Kesalahan Pada Server')
             })
